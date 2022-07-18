@@ -6,6 +6,7 @@ import com.hust.blogapp.payload.PostDTO;
 import com.hust.blogapp.payload.PostResponse;
 import com.hust.blogapp.repository.PostRepository;
 import com.hust.blogapp.service.PostService;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,8 +21,11 @@ public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
 
-    public PostServiceImpl(PostRepository postRepository) {
+    private final ModelMapper modelMapper;
+
+    public PostServiceImpl(PostRepository postRepository, ModelMapper modelMapper) {
         this.postRepository = postRepository;
+        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -89,20 +93,22 @@ public class PostServiceImpl implements PostService {
 
     //convert Entity into DTO
     private PostDTO mapToDTO(Post post) {
-        PostDTO postDTO = new PostDTO();
-        postDTO.setId(post.getId());
-        postDTO.setTitle(post.getTitle());
-        postDTO.setDescription(post.getDescription());
-        postDTO.setContent(post.getContent());
+        PostDTO postDTO = modelMapper.map(post, PostDTO.class);
+//        PostDTO postDTO = new PostDTO();
+//        postDTO.setId(post.getId());
+//        postDTO.setTitle(post.getTitle());
+//        postDTO.setDescription(post.getDescription());
+//        postDTO.setContent(post.getContent());
         return postDTO;
     }
 
     //convert DTO to Entity
     private Post mapToEntity(PostDTO postDTO) {
-        Post post = new Post();
-        post.setTitle(postDTO.getTitle());
-        post.setDescription(postDTO.getDescription());
-        post.setContent(postDTO.getContent());
+        Post post = modelMapper.map(postDTO,Post.class);
+//        Post post = new Post();
+//        post.setTitle(postDTO.getTitle());
+//        post.setDescription(postDTO.getDescription());
+//        post.setContent(postDTO.getContent());
         return post;
     }
 }
